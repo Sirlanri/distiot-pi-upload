@@ -45,18 +45,18 @@ func main() {
 	man := sdk.NewManager("68b47b8e-8dcc-4f09-97eb-801123c58f59")
 	man.MasterUrl = "http://192.168.1.150:8001/master"
 	man.UserUrl = "http://192.168.1.150:8091/user"
-	/*
-		humiDevice, err := man.NewDevice(17)
-		if err != nil {
-			fmt.Println("创建humi设备失败 ", err.Error())
-			return
-		}
-		tempDevice, err := man.NewDevice(16)
-		if err != nil {
-			fmt.Println("创建temp设备失败 ", err.Error())
-			return
-		}
-	*/
+
+	humiDevice, err := man.NewDevice(17)
+	if err != nil {
+		fmt.Println("创建humi设备失败 ", err.Error())
+		return
+	}
+	tempDevice, err := man.NewDevice(16)
+	if err != nil {
+		fmt.Println("创建temp设备失败 ", err.Error())
+		return
+	}
+
 	coreDevice, err := man.NewDevice(18)
 	if err != nil {
 		fmt.Println("创建CoreTemp设备失败", err.Error())
@@ -71,6 +71,20 @@ func main() {
 			fmt.Println("CoreTemp 上传温度失败！", err.Error())
 			return
 		}
-
+		//获取上传温湿度数据
+		temp, humi, err := gethumi()
+		if err != nil {
+			continue
+		}
+		err = tempDevice.UploadDataHttp(strconv.Itoa(temp))
+		if err != nil {
+			fmt.Println("上传temp失败 ", err.Error())
+			return
+		}
+		err = humiDevice.UploadDataHttp(strconv.Itoa(humi))
+		if err != nil {
+			fmt.Println("上传humi失败 ", err.Error())
+			return
+		}
 	}
 }
