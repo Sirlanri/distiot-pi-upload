@@ -42,15 +42,35 @@ func getCodeTemp() float64 {
 }
 
 func main() {
-
+	man := sdk.NewManager("68b47b8e-8dcc-4f09-97eb-801123c58f59")
+	man.MasterUrl = "http://192.168.1.150:8001/master"
+	man.UserUrl = "http://192.168.1.150:8091/user"
+	/*
+		humiDevice, err := man.NewDevice(17)
+		if err != nil {
+			fmt.Println("创建humi设备失败 ", err.Error())
+			return
+		}
+		tempDevice, err := man.NewDevice(16)
+		if err != nil {
+			fmt.Println("创建temp设备失败 ", err.Error())
+			return
+		}
+	*/
+	coreDevice, err := man.NewDevice(18)
+	if err != nil {
+		fmt.Println("创建CoreTemp设备失败", err.Error())
+		return
+	}
 	for {
 		time.Sleep(time.Second)
 		coreTemp := getCodeTemp()
 		fmt.Println("内核温度 ", coreTemp)
-		temp, humi, err := gethumi()
+		err = coreDevice.UploadDataHttp(strconv.FormatFloat(coreTemp, 'E', -1, 64))
 		if err != nil {
-			continue
+			fmt.Println("CoreTemp 上传温度失败！", err.Error())
+			return
 		}
-		fmt.Printf("潮湿为%d，温度为%d \n", humi, temp)
+
 	}
 }
