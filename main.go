@@ -43,9 +43,10 @@ func getCodeTemp() float64 {
 
 func main() {
 	man := sdk.NewManager("68b47b8e-8dcc-4f09-97eb-801123c58f59")
-	man.MasterUrl = "http://192.168.1.150:8001/master"
-	man.UserUrl = "http://192.168.1.150:8091/user"
-
+	/*
+		man.MasterUrl = "http://192.168.1.150:8001/master"
+		man.UserUrl = "http://192.168.1.150:8091/user"
+	*/
 	humiDevice, err := man.NewDevice(17)
 	if err != nil {
 		fmt.Println("创建humi设备失败 ", err.Error())
